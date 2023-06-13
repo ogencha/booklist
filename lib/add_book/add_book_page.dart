@@ -14,46 +14,76 @@ class AddBookPage extends StatelessWidget {
         body: Center(
           child: Consumer<AddBookModel>(
             builder: (context, model, child) {
-              return Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Column(
-                  children: [
-                    TextField(
-                      decoration: const InputDecoration(hintText: '本のタイトル'),
-                      onChanged: (text) {
-                        model.title = text;
-                      },
+              return Stack(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      children: [
+                        GestureDetector(
+                          child: SizedBox(
+                            width: 100,
+                            height: 150,
+                            child: model.imageFile != null
+                                ? Image.file(model.imageFile!)
+                                : Container(
+                                    color: Colors.grey,
+                                  ),
+                          ),
+                          onTap: () async {
+                            await model.pickImage();
+                          },
+                        ),
+                        TextField(
+                          decoration: const InputDecoration(hintText: '本のタイトル'),
+                          onChanged: (text) {
+                            model.title = text;
+                          },
+                        ),
+                        const SizedBox(
+                          height: 8,
+                        ),
+                        TextField(
+                          decoration: const InputDecoration(hintText: '本の著者'),
+                          onChanged: (text) {
+                            model.author = text;
+                          },
+                        ),
+                        const SizedBox(
+                          height: 16,
+                        ),
+                        ElevatedButton(
+                          onPressed: () async {
+                            //追加の処理
+                            try {
+                              model.startLoading();
+                              await model.addBook();
+                              Navigator.of(context).pop(true);
+                            } catch (e) {
+                              print(e);
+                              final snackBar = SnackBar(
+                                backgroundColor: Colors.red,
+                                content: Text(e.toString()),
+                              );
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(snackBar);
+                            } finally {
+                              model.endLoading();
+                            }
+                          },
+                          child: const Text('追加する'),
+                        ),
+                      ],
                     ),
-                    const SizedBox(
-                      height: 8,
-                    ),
-                    TextField(
-                      decoration: const InputDecoration(hintText: '本の著者'),
-                      onChanged: (text) {
-                        model.author = text;
-                      },
-                    ),
-                    const SizedBox(
-                      height: 16,
-                    ),
-                    ElevatedButton(
-                      onPressed: () async {
-                        //追加の処理
-                        try {
-                          await model.addBook();
-                          Navigator.of(context).pop(true);
-                        } catch (e) {
-                          final snackBar = SnackBar(
-                            backgroundColor: Colors.red,
-                            content: Text(e.toString()),
-                          );
-                          ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                        }
-                      },
-                      child: const Text('追加する'),
-                    ),
-                  ],
-                ),
+                  ),
+                  if (model.isLoading)
+                    Container(
+                      color: Colors.black54,
+                      child: Center(
+                        child: CircularProgressIndicator(),
+                      ),
+                    )
+                ],
               );
             },
           ),

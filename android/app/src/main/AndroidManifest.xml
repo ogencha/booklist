@@ -1,5 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.book_list_sample">
+    <uses-permission android:name="android.permission.INTERNET"/>
    <application
         android:label="book_list_sample"
         android:name="${applicationName}"
