@@ -4,6 +4,7 @@ import 'package:book_list_sample/domain/book.dart';
 import 'package:book_list_sample/edit_book/edit_book_page.dart';
 import 'package:book_list_sample/login/login_page.dart';
 import 'package:book_list_sample/main.dart';
+import 'package:book_list_sample/mypage/my_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -27,12 +28,12 @@ class BookListPage extends StatelessWidget {
                       await Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => LoginPage(),
+                          builder: (context) => MyPage(),
                           fullscreenDialog: true,
                         ),
                       );
                     } else {
-                      print('ログインいてない');
+                      print('ログインしてない');
                       await Navigator.push(
                         context,
                         MaterialPageRoute(
